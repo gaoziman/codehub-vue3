@@ -30,7 +30,7 @@
                  placeholder="请输入关键词...">
         </div>
         <!-- 登录 -->
-        <div class="text-gray-900 ml-1 mr-1 hover:text-blue-700">登录</div>
+        <div class="text-gray-900 ml-1 mr-1 hover:text-blue-700"  @click="$router.push('/login')">登录</div>
 
 
 
