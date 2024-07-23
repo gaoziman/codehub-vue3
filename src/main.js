@@ -5,6 +5,8 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import App from '@/App.vue'
 
 import router from '@/router'
+// 导入全局路由守卫
+import '@/permission'
 
 const  app = createApp(App)
 
