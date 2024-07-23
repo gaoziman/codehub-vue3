@@ -94,7 +94,6 @@ const rules = {
 
 // 登录
 const onSubmit = () => {
-  console.log('登录')
   // 先验证 form 表单字段
   formRef.value.validate((valid) => {
     if (!valid) {
@@ -105,15 +104,15 @@ const onSubmit = () => {
     loading.value = true
     login(form.username, form.password).then((res) => {
       // 判断是否成功
-      if (res.data.code === 200) {
+      if (res.code === 200) {
         // 跳转到后台首页
         router.push('/admin/index')
         showMessage("登录成功")
         // 存储 Token 到 Cookie 中
-        const token = res.data.data.token
+        const token = res.data.token
         setToken(token)
       } else {
-        showMessage(res.data.message, 'error')
+        showMessage(res.message, 'error')
       }
     }).finally(() => {
       // 结束加载
