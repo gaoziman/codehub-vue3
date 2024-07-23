@@ -37,7 +37,7 @@
           <el-form-item prop="password">
             <!-- 密码框组件 -->
             <el-input size="large" v-model="form.password" type="password" placeholder="请输入用户名"
-                      :prefix-icon="Lock" clearable/>
+                      :prefix-icon="Lock" clearable show-password/>
           </el-form-item>
           <el-form-item>
             <!-- 登录按钮，宽度设置为 100% -->
