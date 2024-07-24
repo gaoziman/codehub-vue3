@@ -1,25 +1,34 @@
 <template>
   <!-- 左边：标签导航栏 -->
-  <div class="fixed top-[64px] h-[44px] px-2 right-0 z-50 flex items-center bg-white" style="left: 250px;" :style="{left: menuStore.menuWidth}">
-    <el-tabs v-model="editableTabsValue" type="card" class="demo-tabs" closable @tab-remove="removeTab"  style="min-width: 10px;">
-      <el-tab-pane v-for="item in editableTabs" :key="item.name" :label="item.title" :name="item.name">
-
+  <div class="fixed top-[64px] h-[44px] px-2 right-0 z-50 flex items-center bg-white" style="left: 250px;"
+       :style="{left: menuStore.menuWidth}">
+    <el-tabs v-model="activeTab"
+             type="card"
+             class="demo-tabs"
+             @tab-remove="removeTab"
+             @tab-change="tabChange"
+             style="min-width: 10px;">
+      <el-tab-pane v-for="item in tabList"
+                   :key="item.path"
+                   :label="item.title"
+                   :name="item.path"
+                   :closable="item.path !== '/admin/index'">
       </el-tab-pane>
     </el-tabs>
 
 
     <!-- 右侧下拉菜单 -->
     <span class="ml-auto flex items-center justify-center h-[32px] w-[32px]">
-            <el-dropdown>
+            <el-dropdown @command="handleCloseTab">
                 <span class="el-dropdown-link">
                     <el-icon>
-                        <arrow-down />
+                        <arrow-down/>
                     </el-icon>
                 </span>
                 <template #dropdown>
                     <el-dropdown-menu>
-                        <el-dropdown-item>关闭其他</el-dropdown-item>
-                        <el-dropdown-item>关闭全部</el-dropdown-item>
+                        <el-dropdown-item command="closeOthers">关闭其他</el-dropdown-item>
+                        <el-dropdown-item command="closeAll">关闭全部</el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
@@ -29,69 +38,26 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import {ArrowDown} from "@element-plus/icons-vue";
-import { useMenuStore } from '@/stores/menu'
+import {useTabList} from "@/composables/useTagList.js";
 
-const menuStore = useMenuStore()
+const { menuStore, activeTab, tabList, tabChange, removeTab, handleCloseTab } = useTabList()
 
-let tabIndex = 2
-const editableTabsValue = ref('2')
-const editableTabs = ref([
-  {
-    title: 'Tab 1',
-    name: '1',
-    content: 'Tab 1 content',
-  },
-  {
-    title: 'Tab 2',
-    name: '2',
-    content: 'Tab 2 content',
-  },
-])
-
-const addTab = (targetName) => {
-  const newTabName = `${++tabIndex}`
-  editableTabs.value.push({
-    title: 'New Tab',
-    name: newTabName,
-    content: 'New Tab content',
-  })
-  editableTabsValue.value = newTabName
-}
-const removeTab = (targetName) => {
-  const tabs = editableTabs.value
-  let activeName = editableTabsValue.value
-  if (activeName === targetName) {
-    tabs.forEach((tab, index) => {
-      if (tab.name === targetName) {
-        const nextTab = tabs[index + 1] || tabs[index - 1]
-        if (nextTab) {
-          activeName = nextTab.name
-        }
-      }
-    })
-  }
-
-  editableTabsValue.value = activeName
-  editableTabs.value = tabs.filter((tab) => tab.name !== targetName)
-}
 </script>
 
 <style>
 .el-tabs__item {
   font-size: 12px;
-  border: 1px solid #d8dce5!important;
-  border-radius: 3px!important;
+  border: 1px solid #d8dce5 !important;
+  border-radius: 3px !important;
 }
 
-.el-tabs--card>.el-tabs__header .el-tabs__item {
-  margin-left: 0.1rem!important;
-  margin-right: 0.1rem!important;
+.el-tabs--card > .el-tabs__header .el-tabs__item {
+  margin-left: 0.1rem !important;
+  margin-right: 0.1rem !important;
 }
 
 .el-tabs__item.is-active {
-  background-color: var(--el-color-primary)!important;
+  background-color: var(--el-color-primary) !important;
   color: #fff;
 }
 
@@ -114,18 +80,18 @@ const removeTab = (targetName) => {
   margin-bottom: 0;
 }
 
-.el-tabs--card>.el-tabs__header .el-tabs__nav {
+.el-tabs--card > .el-tabs__header .el-tabs__nav {
   border: 0;
 }
 
-.el-tabs--card>.el-tabs__header .el-tabs__item {
+.el-tabs--card > .el-tabs__header .el-tabs__item {
   height: 32px;
   line-height: 32px;
   border: 0;
   background: #fff;
 }
 
-.el-tabs--card>.el-tabs__header {
+.el-tabs--card > .el-tabs__header {
   border: 0;
 }
 
