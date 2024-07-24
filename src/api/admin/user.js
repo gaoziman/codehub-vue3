@@ -10,3 +10,8 @@ export function login(username, password) {
 export function getUserInfo() {
     return axios.post("/admin/user/info")
 }
+
+// 修改用户密码
+export function updateAdminPassword(data) {
+    return axios.post("/admin/updatePassword", data)
+}

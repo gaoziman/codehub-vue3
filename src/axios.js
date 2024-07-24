@@ -1,5 +1,5 @@
 import axios from "axios";
-import {getToken} from "@/composables/auth.js";
+import {getToken} from "@/composables/cookie.js";
 import {showMessage} from "@/composables/util.js";
 
 // 创建 Axios 实例

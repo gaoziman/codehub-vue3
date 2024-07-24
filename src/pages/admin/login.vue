@@ -100,7 +100,6 @@ const onSubmit = () => {
   // 先验证 form 表单字段
   formRef.value.validate((valid) => {
     if (!valid) {
-      console.log('表单验证不通过')
       return false
     }
     // 开始加载
@@ -115,7 +114,7 @@ const onSubmit = () => {
         const token = res.data.token
         setToken(token)
         // 获取用户信息，并存储到全局状态中
-        userStore.setUserInfo()
+         userStore.setUserInfo()
       } else {
         showMessage(res.message, 'error')
       }
