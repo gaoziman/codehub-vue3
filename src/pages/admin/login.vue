@@ -57,6 +57,9 @@ import {login} from '@/api/admin/user'
 import {useRouter} from 'vue-router';
 import {showMessage} from '@/composables/util'
 import {setToken} from "@/composables/cookie.js";
+import { useUserStore } from '@/stores/user'
+
+const userStore = useUserStore()
 
 const router = useRouter()
 
@@ -111,6 +114,8 @@ const onSubmit = () => {
         // 存储 Token 到 Cookie 中
         const token = res.data.token
         setToken(token)
+        // 获取用户信息，并存储到全局状态中
+        userStore.setUserInfo()
       } else {
         showMessage(res.message, 'error')
       }
