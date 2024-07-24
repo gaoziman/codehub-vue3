@@ -1,13 +1,14 @@
 <template>
-  <div class="bg-slate-800 h-screen text-white">
+  <div class="bg-slate-800 h-screen text-white transition-all" :style="{ width: menuStore.menuWidth }">
     <!-- 顶部 Logo, 指定高度为 64px, 和右边的 Header 头保持一样高 -->
     <div class="flex items-center justify-center h-[64px]">
-      <img src="@/assets/logo.png" class="h-[60px]" alt="logo">
+      <img v-if="menuStore.menuWidth === '250px'" src="@/assets/logo.png" class="h-[60px]" alt="logo">
+      <img v-else src="@/assets/logo-mini.png" class="h-[60px]" alt="logo">
 <!--      <h1 style="margin-left: 10px;font-weight: bold;font-size: large">LeoCodeHub</h1>-->
     </div>
 
     <!-- 下方菜单 -->
-    <el-menu :default-active="defaultActive"  @select="handleSelect" class="el-menu-vertical-demo" >
+    <el-menu :default-active="defaultActive"  @select="handleSelect" :collapse="isCollapse" :collapse-transition="false" class="el-menu-vertical-demo" >
       <template v-for="(item ,index) in menus" :key="index">
         <el-menu-item :index="item.path">
         <el-icon>
@@ -22,8 +23,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref,computed } from 'vue'
 import {useRoute, useRouter} from 'vue-router'
+import { useMenuStore } from '@/stores/menu'
+// 引入 useMenuStore
+const menuStore = useMenuStore()
+
 
 const router = useRouter()
 const route = useRoute()
@@ -37,6 +42,8 @@ const handleSelect =(path) =>{
   router.push(path)
 }
 
+// 是否折叠
+const isCollapse = computed(() =>  !(menuStore.menuWidth === '250px'))
 
 
 const menus = [

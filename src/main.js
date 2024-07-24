@@ -4,6 +4,10 @@ import '@/assets/main.css'
 import 'nprogress/nprogress.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import App from '@/App.vue'
+// 引入全局状态管理 Pinia
+import { createPinia } from 'pinia'
+
+const pinia = createPinia()
 
 import router from '@/router'
 // 导入全局路由守卫
@@ -17,4 +21,5 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 
 app.use(router)
+app.use(pinia)
 app.mount('#app')
