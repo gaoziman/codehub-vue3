@@ -238,13 +238,13 @@ const editCategoryBtnClick = (row) => {
 
 // 提交事件
 const onSubmit = () => {
-  // 显示提交按钮 loading
-  formDialogRef.value.showBtnLoading()
   // 先验证form 表单字段
   formRef.value.validate((valid) => {
     if (!valid) {
       return false
     }
+    // 显示提交按钮 loading
+    formDialogRef.value.showBtnLoading()
 
     if (dialogTitle.value === '添加文章分类') {
       // 请求添加分类接口
@@ -263,7 +263,7 @@ const onSubmit = () => {
           // 提示错误消息
           showMessage(message, 'error')
         }
-      })
+      }).finally(() => formDialogRef.value.closeBtnLoading()) // 隐藏提交按钮 loading
     } else if (dialogTitle.value === '更新文章分类') {
       // 请求更新分类接口
       updateCategory(form).then((res) => {
