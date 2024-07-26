@@ -1,6 +1,8 @@
 import axios from "axios";
+import router from "@/router";
 import {getToken} from "@/composables/cookie.js";
 import {showMessage} from "@/composables/util.js";
+import { useUserStore } from '@/stores/user'
 
 // 创建 Axios 实例
 const instance = axios.create({
@@ -31,6 +33,20 @@ instance.interceptors.response.use(function (response) {
     console.log(JSON.stringify(error));
     // 若后台有错误提示就用提示文字，默认提示为 '请求失败'
     let errorMsg = error.response.data.message || '请求失败'
+    // 处理 401 错误 (token 过期)
+    if (error.response.status === 401) {
+        errorMsg = 'Token 已过期，请重新登录';
+
+        // 获取用户 Store
+        const userStore = useUserStore();
+
+        // 调用用户退出逻辑
+        userStore.logout();
+
+        // 跳转到登录页面
+        router.push('/login');
+    }
+
     // 弹错误提示
     showMessage(errorMsg, 'error')
     return Promise.reject(error)
