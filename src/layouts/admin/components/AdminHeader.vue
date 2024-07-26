@@ -53,12 +53,12 @@
       </el-dropdown>
 
 
-      <!-- 修改密码 -->
+<!--       修改密码
       <el-dialog v-model="dialogVisible" title="修改密码" width="40%" :draggable="true" :close-on-click-modal="false"
                  :close-on-press-escape="false">
         <el-form ref="formRef" :rules="rules" :model="form">
           <el-form-item label="用户名" prop="username" label-width="120px">
-            <!-- 输入框组件 -->
+            &lt;!&ndash; 输入框组件 &ndash;&gt;
             <el-input size="large" v-model="form.username" placeholder="请输入用户名" clearable disabled/>
           </el-form-item>
           <el-form-item label="密码" prop="password" label-width="120px">
@@ -78,8 +78,25 @@
                 </el-button>
             </span>
         </template>
-      </el-dialog>
+      </el-dialog>-->
 
+      <!-- 修改密码 -->
+      <FormDialog ref="formDialogRef" :title="dialogTitle" destroyOnClose @submit="onSubmit">
+        <el-form ref="formRef" :rules="rules" :model="form">
+          <el-form-item label="用户名" prop="username" label-width="120px" size="large">
+            <!-- 输入框组件 -->
+            <el-input v-model="form.username" placeholder="请输入用户名" clearable disabled />
+          </el-form-item>
+          <el-form-item label="新密码" prop="password" label-width="120px" size="large">
+            <el-input type="password" v-model="form.password" placeholder="请输入新密码"
+                      clearable show-password />
+          </el-form-item>
+          <el-form-item label="确认新密码" prop="rePassword" label-width="120px" size="large">
+            <el-input type="password" v-model="form.rePassword" placeholder="请确认新密码"
+                      clearable show-password />
+          </el-form-item>
+        </el-form>
+      </FormDialog>
     </div>
   </div>
 </template>
@@ -94,6 +111,7 @@ import {useRouter} from 'vue-router'
 import {showMessage, showModel} from "@/composables/util.js";
 import {reactive, ref, watch} from "vue";
 import {updateAdminPassword} from "@/api/admin/user.js";
+import FormDialog from "@/components/FormDialog.vue";
 
 // 引入了用户 Store
 const userStore = useUserStore()
@@ -107,18 +125,22 @@ const {isFullscreen, toggle} = useFullscreen()
 // 刷新页面
 const handleRefresh = () => location.reload()
 
+// 动态标题
+const dialogTitle  = '修改密码'
+
 // 引入了菜单 store
 const menuStore = useMenuStore()
 
-//  对话框是否显示
-const dialogVisible = ref(false)
+// 对话框是否显示
+// const dialogVisible = ref(false)
+const formDialogRef = ref(null)
 
 // 下拉菜单事件处理
 const handleCommand = (command) => {
   // 更新密码
   if (command === 'updatePassword') {
     // 显示修改密码对话框
-    dialogVisible.value = true
+    formDialogRef.value.open()
   } else if (command === 'logout') {
     // 退出登录
     logout()
@@ -178,7 +200,7 @@ const rules = {
 }
 
 // 动态更新用户名字段
-watch(() => dialogVisible.value, (newVal) => {
+watch(() => userStore.userInfo.username, (newVal) => {
   if (newVal) {
     form.username = userStore.userInfo.username || ''
   }
@@ -186,6 +208,8 @@ watch(() => dialogVisible.value, (newVal) => {
 
 // 修改密码
 const onSubmit = () => {
+  // 显示提交按钮 loading
+  formDialogRef.value.showBtnLoading()
   formRef.value.validate((valid) => {
     if (!valid) {
       console.log('表单验证不通过')
@@ -204,7 +228,7 @@ const onSubmit = () => {
         userStore.logout()
 
         // 隐藏对话框
-        dialogVisible.value = false
+        formDialogRef.value.close()
 
         // 跳转登录页
         router.push('/login')
@@ -214,7 +238,7 @@ const onSubmit = () => {
         // 提示消息
         showMessage(message, 'error')
       }
-    })
+    }).finally(() => formDialogRef.value.closeBtnLoading()) // 隐藏提交按钮 loading
   })
 }
 
