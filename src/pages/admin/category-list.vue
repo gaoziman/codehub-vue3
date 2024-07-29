@@ -154,7 +154,7 @@ const onClearDate = ()=>{
 
 // 清空查询条件时调用查询方法
 const onClearForm = ()=>{
-  form.name = ''
+  searchCategoryName.value = ''
   getTableData();
 }
 
@@ -313,7 +313,6 @@ getTableData()
 
 // 按回车键后，执行查询
 function onKeyUp(e) {
-  console.log(e)
   if (e.key == 'Enter') {
     getTableData()
   }
