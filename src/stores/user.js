@@ -13,7 +13,6 @@ export const useUserStore = defineStore('user', () => {
             getUserInfo().then(res => {
                 if (res.status === true) {
                     userInfo.value = res.data
-                    console.log(JSON.stringify(userInfo.value))
                 }
             })
         }

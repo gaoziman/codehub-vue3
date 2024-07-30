@@ -2,6 +2,7 @@ import router from '@/router/index'
 import {getToken} from '@/composables/cookie.js'
 import {showMessage} from '@/composables/util'
 import { showPageLoading,hidePageLoading } from '@/composables/util'
+import { useBlogSettingStore } from '@/stores/blogsetting'
 
 
 // 全局路由前置守卫
@@ -14,11 +15,18 @@ router.beforeEach((to, from, next) => {
     if (!token && to.path.startsWith('/admin')) {
         showMessage('请先登录', 'warning')
         next({ path: '/login' })
-    } else if (token && to.path == '/login') {
+    } else if (token && to.path === '/login') {
         // 若用户已经登录，且重复访问登录页
         showMessage('请勿重复登录', 'warning')
         // 跳转后台首页
         next({ path: '/admin/index' })
+    }else if (!to.path.startsWith('/admin')) {
+        // 如果访问的非 /admin 前缀路由
+        // 引入博客设置 store
+        let blogSettingStore = useBlogSettingStore()
+        // 获取博客设置信息并保存到全局状态中
+        blogSettingStore.getBlogSetting()
+        next()
     } else {
         next()
     }
